@@ -23,11 +23,8 @@ imagesRef.forEach(el => {
   imagesUrl.push(el.getAttribute('data-source'));
 });
 
-// images.forEach(image => console.log(images.indexOf(image)));
-
-
 function createGalleryMarkup(images) {
-    return images.map(({ preview, original, description }, index) => {
+    return images.map(({ preview, original, description }) => {
         return `
     <li class="gallery__item">
         <a
@@ -57,13 +54,17 @@ function onGalleryImageClick(event) {
     window.addEventListener('keydown', onKeydown);
     modalRef.classList.add('is-open');
 
-    modalImage.src = event.target.dataset.source;
+    const currentModalImageUrl = event.target.dataset.source;
+    const cuttentModalImageAlt = event.target.alt;
+
+    setModalImageAttributes(currentModalImageUrl, cuttentModalImageAlt);
 }
 
 function onModalBtnClick() {
     window.removeEventListener('keydown', onKeydown);
     modalRef.classList.remove('is-open');
-    modalImage.src = '';
+
+    setModalImageAttributes('#', '#');
 }
 
 function onOverlayClick(event) {
@@ -94,5 +95,13 @@ function onKeydown(event) {
         onModalBtnClick();
     }
 
-    modalImage.src = imagesUrl[imageIndex];
+    const currentSrc = imagesUrl[imageIndex];
+    const currentAlt = imagesRef[imageIndex].getAttribute('alt');
+
+    setModalImageAttributes(currentSrc, currentAlt);
+}
+
+function setModalImageAttributes(src, alt) {
+    modalImage.src = src;
+    modalImage.alt = alt;
 }
